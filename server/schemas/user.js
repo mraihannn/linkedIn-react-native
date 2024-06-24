@@ -19,14 +19,15 @@ const typeDefs = `#graphql
   
   # Read Operation
   type Query {
-    books: [Book]
-    bookByTitle(title:String): Book
+    getUserById(_id:ObjectId): User
+    searchUser(name:String): User
   }
 
   # Write Operation
   type Mutation {
     # Argument yang pengen dikirim
-    addBook(title:String, author:String, price:Int): Book
+    register(username:String, email:String, password:String): User
+    login(username:String, password:String): User
   }
 `;
 

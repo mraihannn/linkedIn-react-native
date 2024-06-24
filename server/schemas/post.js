@@ -12,7 +12,7 @@ const typeDefs = `#graphql
     imgUrl: String
     authorId: ObjectId!
     comments: [Comment]
-    likes: [Likes]
+    likes: [Like]
     createdAt: Date
     updatedAt: Date
   }
@@ -24,7 +24,7 @@ const typeDefs = `#graphql
     updatedAt: Date
   }
 
-  type Likes{
+  type Like{
     username: String!
     createdAt: Date
     updatedAt: Date
@@ -36,14 +36,15 @@ const typeDefs = `#graphql
   
   # Read Operation
   type Query {
-    books: [Book]
-    bookByTitle(title:String): Book
+    getPostById(_id:ObjectId): Post
   }
 
   # Write Operation
   type Mutation {
     # Argument yang pengen dikirim
-    addBook(title:String, author:String, price:Int): Book
+    addPost(content:String, authorId:ObjectId): Post
+    addComment(content:String, username:String, _id:ObjectId): Comment
+    addLike(username:String, _id:ObjectId): Like
   }
 `;
 

@@ -17,16 +17,9 @@ const typeDefs = `#graphql
   # clients can execute, along with the return type for each. In this
   # case, the "books" query returns an array of zero or more Books (defined above).
   
-  # Read Operation
-  type Query {
-    books: [Book]
-    bookByTitle(title:String): Book
-  }
-
-  # Write Operation
   type Mutation {
     # Argument yang pengen dikirim
-    addBook(title:String, author:String, price:Int): Book
+    addFollow(_id: ObjectId, followingId:ObjectId, followerId:ObjectId): Book
   }
 `;
 
