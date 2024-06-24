@@ -23,7 +23,7 @@ const typeDefs = `#graphql
   # Read Operation
   type Query {
     getUserById(id:String): User
-    searchUser(name:String): User
+    searchUser(username:String): [User]
   }
 
   # Write Operation
@@ -34,30 +34,19 @@ const typeDefs = `#graphql
   }
 `;
 
-const books = [
-  {
-    title: "The Awakening",
-    author: "Kate Chopin",
-  },
-  {
-    title: "City of Glass",
-    author: "Paul Auster",
-  },
-];
-
 // Resolvers define how to fetch the types defined in your schema.
 // This resolver retrieves books from the "books" array above.
 const resolvers = {
   Query: {
-    getUserById: (_, args) => {
+    getUserById: async (_, args) => {
       const { id } = args;
-      const foundUser = User.getById(id);
+      const foundUser = await User.getById(id);
       return foundUser;
     },
-    searchUser: (_, args) => {
-      const { name } = args;
-      const foundedBook = books.find((el) => el.title == title);
-      return foundedBook;
+    searchUser: async (_, args) => {
+      const { username } = args;
+      const foundUser = await User.getByName(username);
+      return foundUser;
     },
   },
   Mutation: {
