@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const { ApolloServer } = require("@apollo/server");
 const { startStandaloneServer } = require("@apollo/server/standalone");
 
@@ -6,11 +8,21 @@ const {
   resolvers: userResolvers,
 } = require("./schemas/user");
 
+const {
+  typeDefs: postTypeDefs,
+  resolvers: postResolvers,
+} = require("./schemas/post");
+
+const {
+  typeDefs: followTypeDefs,
+  resolvers: followResolvers,
+} = require("./schemas/follow");
+
 // The ApolloServer constructor requires two parameters: your schema
 // definition and your set of resolvers.
 const server = new ApolloServer({
-  typeDefs: [userTypeDefs],
-  resolvers: [userResolvers],
+  typeDefs: [userTypeDefs, postTypeDefs, followTypeDefs],
+  resolvers: [userResolvers, postResolvers, followResolvers],
 });
 
 // Passing an ApolloServer instance to the `startStandaloneServer` function:
