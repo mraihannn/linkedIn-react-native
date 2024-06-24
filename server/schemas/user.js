@@ -23,7 +23,7 @@ const typeDefs = `#graphql
   # Read Operation
   type Query {
     getUserById(id:String): User
-    searchUser(username:String): [User]
+    searchUser(username:String): User
   }
 
   # Write Operation
@@ -46,6 +46,7 @@ const resolvers = {
     searchUser: async (_, args) => {
       const { username } = args;
       const foundUser = await User.getByName(username);
+      // console.log(foundUser);
       return foundUser;
     },
   },
