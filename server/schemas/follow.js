@@ -6,11 +6,11 @@ const typeDefs = `#graphql
 
   # This "Book" type defines the queryable fields for every book in our data source.
   type Follow {
-    _id: ObjectId
-    followingId: ObjectId
-    followerId: ObjectId
-    createdAt: Date
-    updatedAt: Date
+    _id: String
+    followingId: String
+    followerId: String
+    createdAt: String
+    updatedAt: String
   }
 
   # The "Query" type is special: it lists all of the available queries that
@@ -19,7 +19,7 @@ const typeDefs = `#graphql
   
   type Mutation {
     # Argument yang pengen dikirim
-    addFollow(_id: ObjectId, followingId:ObjectId, followerId:ObjectId): Book
+    addFollow(_id: String, followingId:String, followerId:String): Follow
   }
 `;
 
@@ -37,22 +37,21 @@ const books = [
 // Resolvers define how to fetch the types defined in your schema.
 // This resolver retrieves books from the "books" array above.
 const resolvers = {
-  Query: {
-    books: () => books,
-    bookByTitle: (_, args) => {
-      const { title } = args;
-      const foundedBook = books.find((el) => el.title == title);
-      return foundedBook;
-    },
-  },
-  Mutation: {
-    addBook: (_, args) => {
-      const newBook = { ...args };
-      books.push(newBook);
-
-      return newBook;
-    },
-  },
+  // Query: {
+  //   books: () => books,
+  //   bookByTitle: (_, args) => {
+  //     const { title } = args;
+  //     const foundedBook = books.find((el) => el.title == title);
+  //     return foundedBook;
+  //   },
+  // },
+  // Mutation: {
+  //   addBook: (_, args) => {
+  //     const newBook = { ...args };
+  //     books.push(newBook);
+  //     return newBook;
+  //   },
+  // },
 };
 
 module.exports = { typeDefs, resolvers };

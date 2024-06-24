@@ -6,28 +6,28 @@ const typeDefs = `#graphql
 
   # This "Book" type defines the queryable fields for every book in our data source.
   type Post {
-    _id: ObjectId
+    _id: String
     content: String!
     tags: [String]
     imgUrl: String
-    authorId: ObjectId!
+    authorId: String!
     comments: [Comment]
     likes: [Like]
-    createdAt: Date
-    updatedAt: Date
+    createdAt: String
+    updatedAt: String
   }
 
   type Comment{
     content: String!
     username: String!
-    createdAt: Date
-    updatedAt: Date
+    createdAt: String
+    updatedAt: String
   }
 
   type Like{
     username: String!
-    createdAt: Date
-    updatedAt: Date
+    createdAt: String
+    updatedAt: String
   }
 
   # The "Query" type is special: it lists all of the available queries that
@@ -36,15 +36,15 @@ const typeDefs = `#graphql
   
   # Read Operation
   type Query {
-    getPostById(_id:ObjectId): Post
+    getPostById(_id:String): Post
   }
 
   # Write Operation
   type Mutation {
     # Argument yang pengen dikirim
-    addPost(content:String, authorId:ObjectId): Post
-    addComment(content:String, username:String, _id:ObjectId): Comment
-    addLike(username:String, _id:ObjectId): Like
+    addPost(content:String, authorId:String): Post
+    addComment(content:String, username:String, _id:String): Comment
+    addLike(username:String, _id:String): Like
   }
 `;
 
@@ -62,22 +62,21 @@ const books = [
 // Resolvers define how to fetch the types defined in your schema.
 // This resolver retrieves books from the "books" array above.
 const resolvers = {
-  Query: {
-    books: () => books,
-    bookByTitle: (_, args) => {
-      const { title } = args;
-      const foundedBook = books.find((el) => el.title == title);
-      return foundedBook;
-    },
-  },
-  Mutation: {
-    addBook: (_, args) => {
-      const newBook = { ...args };
-      books.push(newBook);
-
-      return newBook;
-    },
-  },
+  // Query: {
+  //   books: () => books,
+  //   bookByTitle: (_, args) => {
+  //     const { title } = args;
+  //     const foundedBook = books.find((el) => el.title == title);
+  //     return foundedBook;
+  //   },
+  // },
+  // Mutation: {
+  //   addBook: (_, args) => {
+  //     const newBook = { ...args };
+  //     books.push(newBook);
+  //     return newBook;
+  //   },
+  // },
 };
 
 module.exports = { typeDefs, resolvers };
