@@ -1,5 +1,8 @@
 // A schema is a collection of type definitions (hence "typeDefs")
 // that together define the "shape" of queries that are executed against
+
+const Post = require("../models/Post");
+
 // your data.
 const typeDefs = `#graphql
   # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
@@ -39,10 +42,16 @@ const typeDefs = `#graphql
     getPostById(_id:String): Post
   }
 
+  input newPost {
+    content: String
+    tags: [String]
+    imgUrl: String
+  }
+
   # Write Operation
   type Mutation {
     # Argument yang pengen dikirim
-    addPost(content:String, authorId:String): Post
+    addPost(post:newPost): Post
     addComment(content:String, username:String, _id:String): Comment
     addLike(username:String, _id:String): Like
   }
@@ -51,21 +60,22 @@ const typeDefs = `#graphql
 // Resolvers define how to fetch the types defined in your schema.
 // This resolver retrieves books from the "books" array above.
 const resolvers = {
-  // Query: {
-  //   books: () => books,
-  //   bookByTitle: (_, args) => {
-  //     const { title } = args;
-  //     const foundedBook = books.find((el) => el.title == title);
-  //     return foundedBook;
-  //   },
-  // },
-  // Mutation: {
-  //   addBook: (_, args) => {
-  //     const newBook = { ...args };
-  //     books.push(newBook);
-  //     return newBook;
-  //   },
-  // },
+  Query: {
+    getUserById: async (_, args, contextValue) => {
+      contextValue.auth();
+      const { id } = args;
+      const foundUser = await Post.getById(id);
+      return foundUser;
+    },
+  },
+  Mutation: {
+    addPost: async (_, args, contextValue) => {
+      const { _id, email } = contextValue.auth();
+      const newPost = { ...args.post, authorId: _id };
+      await Post.create(newPost);
+      return newPost;
+    },
+  },
 };
 
 module.exports = { typeDefs, resolvers };
