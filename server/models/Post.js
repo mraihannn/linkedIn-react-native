@@ -21,8 +21,26 @@ class Post {
   }
   static async getById(_id) {
     const Posts = database.collection("Posts");
-    const user = await Posts.findOne({ _id: new ObjectId(String(_id)) });
-    return user;
+    const post = await Posts.findOne({ _id: new ObjectId(String(_id)) });
+    return post;
+  }
+  static async updatePostById(payload) {
+    const { idPost, username, content } = payload;
+    const Posts = database.collection("Posts");
+    const post = await Posts.updateOne(
+      { _id: new ObjectId(String(idPost)) },
+      {
+        $push: {
+          comments: {
+            content,
+            username,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+        },
+      }
+    );
+    return post;
   }
 }
 

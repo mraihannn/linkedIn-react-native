@@ -49,11 +49,12 @@ const typeDefs = `#graphql
     imgUrl: String
   }
 
+
   # Write Operation
   type Mutation {
     # Argument yang pengen dikirim
     addPost(post:newPost): Post
-    addComment(content:String, username:String, _id:String): Comment
+    addComment(idPost:String,content:String): Comment
     addLike(username:String, _id:String): Like
   }
 `;
@@ -76,10 +77,18 @@ const resolvers = {
   },
   Mutation: {
     addPost: async (_, args, contextValue) => {
-      const { _id, email } = contextValue.auth();
+      const { _id } = contextValue.auth();
       const newPost = { ...args.post, authorId: _id };
       await Post.create(newPost);
       return newPost;
+    },
+    addComment: async (_, args, contextValue) => {
+      const { username } = contextValue.auth();
+      const { content, idPost } = args;
+      const newComment = { username, content };
+      newComment.createdAt = newComment.updatedAt = new Date();
+      await Post.updatePostById({ ...newComment, idPost });
+      return newComment;
     },
   },
 };

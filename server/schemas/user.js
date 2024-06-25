@@ -103,7 +103,7 @@ const resolvers = {
       if (!comparePassword(password, user.password))
         throw new Error("Invalid email/password");
 
-      const token = signToken({ _id: user._id, email: user.email });
+      const token = signToken({ _id: user._id, username: user.username });
       return {
         accessToken: token,
       };
