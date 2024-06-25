@@ -17,6 +17,7 @@ const {
   typeDefs: followTypeDefs,
   resolvers: followResolvers,
 } = require("./schemas/follow");
+const { verifyToken } = require("./helpers/jwt");
 
 // The ApolloServer constructor requires two parameters: your schema
 // definition and your set of resolvers.
@@ -34,6 +35,18 @@ const server = new ApolloServer({
 // });
 startStandaloneServer(server, {
   listen: { port: 3000 },
+  context: ({ req }) => {
+    return {
+      msg: "Hello",
+      auth: () => {
+        if (!req.headers.authorization) throw new Error("Please login first");
+        const [type, token] = req.headers.authorization.split(" ");
+        if (type !== "Bearer" || !token) throw new Error("Please login first");
+        const decoded = verifyToken(token);
+        return decoded;
+      },
+    };
+  },
 }).then(({ url }) => {
   console.log(`🚀  Server ready at: ${url}`);
 });

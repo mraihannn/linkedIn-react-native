@@ -1,6 +1,8 @@
 // A schema is a collection of type definitions (hence "typeDefs")
 // that together define the "shape" of queries that are executed against
 
+const { comparePassword } = require("../helpers/bcrypt");
+const { signToken } = require("../helpers/jwt");
 const User = require("../models/User");
 
 // your data.
@@ -26,11 +28,21 @@ const typeDefs = `#graphql
     searchUser(username:String): User
   }
 
+  input newUser {
+    username:String
+    email:String
+    password:String
+  }
+
+  type AccessToken {
+    accessToken: String
+  }
+
   # Write Operation
   type Mutation {
     # Argument yang pengen dikirim
-    register(username:String, email:String, password:String): User
-    login(username:String, password:String): User
+    register(user:newUser): User
+    login(email:String, password:String): AccessToken
   }
 `;
 
@@ -38,7 +50,8 @@ const typeDefs = `#graphql
 // This resolver retrieves books from the "books" array above.
 const resolvers = {
   Query: {
-    getUserById: async (_, args) => {
+    getUserById: async (_, args, contextValue) => {
+      contextValue.auth();
       const { id } = args;
       const foundUser = await User.getById(id);
       return foundUser;
@@ -52,14 +65,21 @@ const resolvers = {
   },
   Mutation: {
     register: async (_, args) => {
-      const newUser = { ...args };
+      const newUser = { ...args.user };
       await User.create(newUser);
       return newUser;
     },
     login: async (_, args) => {
-      const newUser = { ...args };
-      await User.create(newUser);
-      return newUser;
+      const { email, password } = args;
+      const user = await User.findByEmail(email);
+      if (!user) throw new Error("User Not Found");
+      if (!comparePassword(password, user.password))
+        throw new Error("Invalid email/password");
+
+      const token = signToken({ _id: user._id, email: user.email });
+      return {
+        accessToken: token,
+      };
     },
   },
 };

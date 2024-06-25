@@ -18,6 +18,11 @@ class User {
     const user = await Users.findOne({ username });
     return user;
   }
+  static async findByEmail(email) {
+    const Users = database.collection("Users");
+    const user = await Users.findOne({ email });
+    return user;
+  }
 }
 
 module.exports = User;
