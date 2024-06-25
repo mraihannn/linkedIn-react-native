@@ -16,6 +16,24 @@ const typeDefs = `#graphql
     username: String!
     email: String!
     password: String!
+    following: [Following]
+    followingDetail: [FollowingDetail]
+    follower: [Following]
+    followerDetail: [FollowingDetail]
+  }
+
+  type Following {
+    _id: String
+    followingId: String
+    followerId: String
+    createdAt: String
+    updatedAt: String
+  }
+  type FollowingDetail {
+    _id: String
+    name: String
+    username: String
+    email: String
   }
 
   # The "Query" type is special: it lists all of the available queries that
@@ -54,6 +72,7 @@ const resolvers = {
     getUserById: async (_, args, contextValue) => {
       contextValue.auth();
       const { id } = args;
+      if (!id) throw new Error("Id User is required");
       const foundUser = await User.getById(id);
       return foundUser;
     },

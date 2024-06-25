@@ -16,11 +16,9 @@ class Post {
   }
   static async getAll() {
     const agg = [
-      // {
-      //   $match: {
-      //     _id: new ObjectId("667a74fa6221a8d8b7bbb3f9"),
-      //   },
-      // },
+      {
+        $sort: { createdAt: -1 },
+      },
       {
         $lookup: {
           from: "Users",
@@ -44,9 +42,8 @@ class Post {
 
     const Posts = database.collection("Posts");
     const cursor = Posts.aggregate(agg);
-    const result = await cursor.sort({ createdAt: -1 }).toArray();
+    const result = await cursor.toArray();
     return result;
-    // const posts = await Posts.find().sort({ createdAt: -1 }).toArray();
   }
   static async getById(_id) {
     const agg = [
