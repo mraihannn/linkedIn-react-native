@@ -16,7 +16,7 @@ class Post {
   }
   static async getAll() {
     const Posts = database.collection("Posts");
-    const posts = await Posts.find().toArray();
+    const posts = await Posts.find().sort({ createdAt: -1 }).toArray();
     return posts;
   }
   static async getById(_id) {
