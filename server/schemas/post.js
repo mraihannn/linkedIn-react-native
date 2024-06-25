@@ -55,7 +55,7 @@ const typeDefs = `#graphql
     # Argument yang pengen dikirim
     addPost(post:newPost): Post
     addComment(idPost:String,content:String): Comment
-    addLike(username:String, _id:String): Like
+    addLike(idPost:String): Like
   }
 `;
 
@@ -78,6 +78,8 @@ const resolvers = {
   Mutation: {
     addPost: async (_, args, contextValue) => {
       const { _id } = contextValue.auth();
+      const { content } = args.post;
+      if (!content) throw new Error("Content is required");
       const newPost = { ...args.post, authorId: _id };
       await Post.create(newPost);
       return newPost;
@@ -85,10 +87,21 @@ const resolvers = {
     addComment: async (_, args, contextValue) => {
       const { username } = contextValue.auth();
       const { content, idPost } = args;
+      if (!content) throw new Error("Content is required");
+      if (!idPost) throw new Error("Id Post is required");
       const newComment = { username, content };
       newComment.createdAt = newComment.updatedAt = new Date();
-      await Post.updatePostById({ ...newComment, idPost });
+      await Post.updatePostComment({ ...newComment, idPost });
       return newComment;
+    },
+    addLike: async (_, args, contextValue) => {
+      const { username } = contextValue.auth();
+      const { idPost } = args;
+      if (!idPost) throw new Error("Id Post is required");
+      const newLikes = { username };
+      newLikes.createdAt = newLikes.updatedAt = new Date();
+      await Post.updatePostLike(idPost, username);
+      return newLikes;
     },
   },
 };

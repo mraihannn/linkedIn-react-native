@@ -24,7 +24,7 @@ class Post {
     const post = await Posts.findOne({ _id: new ObjectId(String(_id)) });
     return post;
   }
-  static async updatePostById(payload) {
+  static async updatePostComment(payload) {
     const { idPost, username, content } = payload;
     const Posts = database.collection("Posts");
     const post = await Posts.updateOne(
@@ -33,6 +33,22 @@ class Post {
         $push: {
           comments: {
             content,
+            username,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+        },
+      }
+    );
+    return post;
+  }
+  static async updatePostLike(idPost, username) {
+    const Posts = database.collection("Posts");
+    const post = await Posts.updateOne(
+      { _id: new ObjectId(String(idPost)) },
+      {
+        $push: {
+          likes: {
             username,
             createdAt: new Date(),
             updatedAt: new Date(),
