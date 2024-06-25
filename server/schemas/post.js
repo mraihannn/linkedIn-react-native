@@ -1,6 +1,7 @@
 // A schema is a collection of type definitions (hence "typeDefs")
 // that together define the "shape" of queries that are executed against
 
+const redis = require("../config/redis");
 const Post = require("../models/Post");
 
 // your data.
@@ -71,7 +72,12 @@ const resolvers = {
   Query: {
     getPosts: async (_, args, contextValue) => {
       contextValue.auth();
+      const postCache = await redis.get("posts:all");
+      if (postCache) {
+        return JSON.parse(postCache);
+      }
       const posts = await Post.getAll();
+      await redis.set("posts:all", JSON.stringify(posts));
       return posts;
     },
     getPostById: async (_, args, contextValue) => {
@@ -89,6 +95,7 @@ const resolvers = {
       if (!content) throw new Error("Content is required");
       const newPost = { ...args.post, authorId: _id };
       await Post.create(newPost);
+      await redis.del("posts:all"); // invalidate cache
       return newPost;
     },
     addComment: async (_, args, contextValue) => {
