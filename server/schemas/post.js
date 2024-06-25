@@ -39,7 +39,8 @@ const typeDefs = `#graphql
   
   # Read Operation
   type Query {
-    getPostById(_id:String): Post
+    getPosts: [Post]
+    getPostById(id:String): Post
   }
 
   input newPost {
@@ -61,7 +62,12 @@ const typeDefs = `#graphql
 // This resolver retrieves books from the "books" array above.
 const resolvers = {
   Query: {
-    getUserById: async (_, args, contextValue) => {
+    getPosts: async (_, args, contextValue) => {
+      contextValue.auth();
+      const posts = await Post.getAll();
+      return posts;
+    },
+    getPostById: async (_, args, contextValue) => {
       contextValue.auth();
       const { id } = args;
       const foundUser = await Post.getById(id);

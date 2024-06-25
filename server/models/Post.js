@@ -14,19 +14,14 @@ class Post {
       updatedAt: new Date(),
     });
   }
+  static async getAll() {
+    const Posts = database.collection("Posts");
+    const posts = await Posts.find().toArray();
+    return posts;
+  }
   static async getById(_id) {
     const Posts = database.collection("Posts");
     const user = await Posts.findOne({ _id: new ObjectId(String(_id)) });
-    return user;
-  }
-  static async getByName(username) {
-    const Posts = database.collection("Posts");
-    const user = await Posts.findOne({ username });
-    return user;
-  }
-  static async findByEmail(email) {
-    const Posts = database.collection("Posts");
-    const user = await Posts.findOne({ email });
     return user;
   }
 }
