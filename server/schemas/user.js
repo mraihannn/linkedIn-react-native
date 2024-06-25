@@ -29,6 +29,7 @@ const typeDefs = `#graphql
   }
 
   input newUser {
+    name:String
     username:String
     email:String
     password:String
@@ -65,10 +66,36 @@ const resolvers = {
   },
   Mutation: {
     register: async (_, args) => {
+      const { name, username, email, password } = args.user;
+      if (!username) {
+        throw new Error("Username is required");
+      }
+      const checkUsername = await User.getByName(username);
+      if (checkUsername) throw new Error("Username already exist");
+
+      if (!email) {
+        throw new Error("Email is required");
+      }
+
+      const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
+      if (!emailRegex.test(email)) {
+        throw new Error("Invalid email format");
+      }
+
+      const checkEmail = await User.findByEmail(email);
+      if (checkEmail) throw new Error("Email already exist");
+
+      if (!password) {
+        throw new Error("Password is required");
+      }
+      if (password.length < 5)
+        throw new Error("Minimum password is 5 character");
+
       const newUser = { ...args.user };
       await User.create(newUser);
       return newUser;
     },
+
     login: async (_, args) => {
       const { email, password } = args;
       const user = await User.findByEmail(email);
