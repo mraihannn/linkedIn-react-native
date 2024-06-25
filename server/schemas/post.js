@@ -16,8 +16,14 @@ const typeDefs = `#graphql
     authorId: String!
     comments: [Comment]
     likes: [Like]
+    DetailAuthor: DetailAuthor
     createdAt: String
     updatedAt: String
+  }
+
+  type DetailAuthor {
+    _id: String
+    username: String
   }
 
   type Comment{
@@ -72,6 +78,7 @@ const resolvers = {
       contextValue.auth();
       const { id } = args;
       const foundUser = await Post.getById(id);
+      console.log(foundUser);
       return foundUser;
     },
   },

@@ -1,4 +1,3 @@
-const { ObjectId } = require("mongodb");
 const { database } = require("../config/mongodb");
 
 class Follow {
