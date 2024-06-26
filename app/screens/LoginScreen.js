@@ -1,16 +1,8 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
-import {
-  StyleSheet,
-  Image,
-  Text,
-  View,
-  TextInput,
-  Button,
-  Alert,
-} from "react-native";
+import { StyleSheet, Image, Text, View, TextInput, Button } from "react-native";
 
-export default function LoginScreen() {
+export default function LoginScreen({ navigation }) {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
 
@@ -48,11 +40,15 @@ export default function LoginScreen() {
           onChangeText={setPassword}
           value={password}
         />
-        <Text>Dont have accout? Sign In</Text>
+        <Text onPress={() => navigation.navigate("Register")}>
+          Dont have accout? Sign In
+        </Text>
         <Button
           // color={"red"}
           title="Sign Up"
-          onPress={() => Alert.alert("Simple Button pressed")}
+          onPress={() =>
+            navigation.navigate("Home", { message: "Data from Login" })
+          }
         />
       </View>
 

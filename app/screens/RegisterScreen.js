@@ -10,7 +10,7 @@ import {
   Alert,
 } from "react-native";
 
-export default function RegisterScreen() {
+export default function RegisterScreen({ navigation }) {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [username, setUsername] = React.useState("");
@@ -61,7 +61,9 @@ export default function RegisterScreen() {
           onChangeText={setPassword}
           value={password}
         />
-        <Text>Already have accout? Sign Up</Text>
+        <Text onPress={() => navigation.navigate("Login")}>
+          Already have accout? Sign Up
+        </Text>
         <Button
           // color={"red"}
           title="Sign In"
