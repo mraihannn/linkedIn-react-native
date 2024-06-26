@@ -25,7 +25,7 @@ export default function LoginScreen({ navigation }) {
         <Text>Close</Text>
       </View>
       <View style={{ justifyContent: "center", flex: 1, gap: 20 }}>
-        <Text style={{ fontSize: 40, fontWeight: "bold" }}>Sign Up</Text>
+        <Text style={{ fontSize: 40, fontWeight: "bold" }}>Sign In</Text>
         <TextInput
           placeholder="Email"
           inputMode="email"
@@ -41,11 +41,11 @@ export default function LoginScreen({ navigation }) {
           value={password}
         />
         <Text onPress={() => navigation.navigate("Register")}>
-          Dont have accout? Sign In
+          Dont have accout? Sign Up
         </Text>
         <Button
           // color={"red"}
-          title="Sign Up"
+          title="Sign In"
           onPress={() =>
             navigation.navigate("Home", { message: "Data from Login" })
           }

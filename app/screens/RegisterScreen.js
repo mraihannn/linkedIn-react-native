@@ -34,7 +34,7 @@ export default function RegisterScreen({ navigation }) {
         <Text>Close</Text>
       </View>
       <View style={{ justifyContent: "center", flex: 1, gap: 20 }}>
-        <Text style={{ fontSize: 40, fontWeight: "bold" }}>Sign In</Text>
+        <Text style={{ fontSize: 40, fontWeight: "bold" }}>Sign Up</Text>
         <TextInput
           placeholder="Name"
           style={styles.input}
@@ -62,11 +62,11 @@ export default function RegisterScreen({ navigation }) {
           value={password}
         />
         <Text onPress={() => navigation.navigate("Login")}>
-          Already have accout? Sign Up
+          Already have accout? Sign In
         </Text>
         <Button
           // color={"red"}
-          title="Sign In"
+          title="Sign Up"
           onPress={() => Alert.alert("Simple Button pressed")}
         />
       </View>

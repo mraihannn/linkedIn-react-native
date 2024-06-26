@@ -1,18 +1,16 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+
+import { Button, Image, StyleSheet, Text, View } from "react-native";
+import Card from "../components/Card";
 
 export default function HomeScreen({ route, navigation }) {
   // const { message } = route.params;
-
   return (
     <View style={styles.container}>
-      <Text>Home Screen</Text>
-      {/* <Text>{message}</Text> */}
-      <Button
-        title="Back to Login"
-        onPress={() => navigation.navigate("Login")}
-      />
+      <Card />
+      <Card />
+      <Card />
       <StatusBar style="auto" />
     </View>
   );
@@ -21,10 +19,14 @@ export default function HomeScreen({ route, navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#fff",
-    paddingTop: 40,
-    paddingHorizontal: 20,
+    backgroundColor: "#D3D3D3",
+    paddingTop: 60,
+    gap: 10,
+    // paddingHorizontal: 20,
+  },
+  input: {
+    height: 40,
+    // borderWidth: 1,
+    padding: 10,
   },
 });
