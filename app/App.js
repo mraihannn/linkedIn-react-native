@@ -37,7 +37,7 @@ export default function App() {
           component={LoginScreen}
         />
         <Stack.Screen name="Register" component={RegisterScreen} />
-        <Stack.Screen name="Home" component={MyTabs} />
+        <Stack.Screen name="Main" component={MyTabs} />
       </Stack.Navigator>
     </NavigationContainer>
   );

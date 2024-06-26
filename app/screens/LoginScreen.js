@@ -47,7 +47,7 @@ export default function LoginScreen({ navigation }) {
           // color={"red"}
           title="Sign In"
           onPress={() =>
-            navigation.navigate("Home", { message: "Data from Login" })
+            navigation.navigate("Main", { message: "Data from Login" })
           }
         />
       </View>
