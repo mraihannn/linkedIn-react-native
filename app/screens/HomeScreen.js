@@ -8,45 +8,62 @@ import FollowCard from "../components/FollowCard";
 import { StatusBar } from "expo-status-bar";
 import { AuthContext } from "../App";
 
+export const GET_POSTS = gql`
+  query GetPosts {
+    getPosts {
+      _id
+      content
+      tags
+      imgUrl
+      comments {
+        content
+        username
+        createdAt
+        updatedAt
+      }
+      authorId
+      likes {
+        username
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+      DetailAuthor {
+        _id
+        username
+      }
+    }
+  }
+`;
+
 export default function HomeScreen({ route, navigation }) {
   // const { message } = route.params;
 
   const { setIsSignedIn } = useContext(AuthContext);
-  const GET_POSTS = gql`
-    query GetPosts {
-      getPosts {
-        _id
-        content
-        tags
-        imgUrl
-        comments {
-          content
-          username
-          createdAt
-          updatedAt
-        }
-        authorId
-        likes {
-          username
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-        DetailAuthor {
-          _id
-          username
-        }
-      }
-    }
-  `;
 
   const { loading, error, data } = useQuery(GET_POSTS);
 
   const [search, setSearch] = React.useState("");
   const DATA = [1, 2, 3, 4, 5, 6, 7];
 
-  console.log({ loading, error, data });
+  if (loading)
+    return (
+      <View
+        style={{ flex: 1, justifyContent: "center", alignContent: "center" }}
+      >
+        <Text>Loading...</Text>
+      </View>
+    );
+  if (error)
+    return (
+      <View
+        style={{ flex: 1, justifyContent: "center", alignContent: "center" }}
+      >
+        <Text>{error.message}</Text>
+      </View>
+    );
+
   return (
     <View style={styles.container}>
       <View

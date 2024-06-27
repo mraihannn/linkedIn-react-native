@@ -1,9 +1,52 @@
 import React from "react";
-import { Button, StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { gql, useMutation } from "@apollo/client";
+import { GET_POSTS } from "./HomeScreen";
 
 export default function CreatePostScree({ navigation }) {
   const [content, setContent] = React.useState("");
+  const [imgUrl, setImgUrl] = React.useState("");
+  const [tags, setTags] = React.useState("");
+
+  const ADD_POST = gql`
+    mutation AddPost($post: newPost) {
+      addPost(post: $post) {
+        content
+        _id
+        tags
+        imgUrl
+        authorId
+        comments {
+          content
+          username
+          createdAt
+          updatedAt
+        }
+        likes {
+          username
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+    }
+  `;
+
+  const [postFunction, { loading }] = useMutation(ADD_POST, {
+    refetchQueries: [GET_POSTS, "getPosts"],
+  });
+  const post = { content, imgUrl, tags };
+
+  const handleSubmit = async () => {
+    try {
+      await postFunction({ variables: { post } });
+      navigation.navigate("Home");
+    } catch (error) {
+      Alert.alert(error.message);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -26,7 +69,7 @@ export default function CreatePostScree({ navigation }) {
             paddingHorizontal: 14,
             paddingVertical: 7,
           }}
-          onPress={() => navigation.navigate("Home")}
+          onPress={handleSubmit}
         >
           Posting
         </Text>
