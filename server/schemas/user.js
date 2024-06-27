@@ -117,6 +117,8 @@ const resolvers = {
 
     login: async (_, args) => {
       const { email, password } = args;
+      if (!email) throw new Error("Email is required");
+      if (!password) throw new Error("Password is required");
       const user = await User.findByEmail(email);
       if (!user) throw new Error("User Not Found");
       if (!comparePassword(password, user.password))

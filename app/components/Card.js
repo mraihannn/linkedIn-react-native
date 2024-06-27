@@ -1,7 +1,7 @@
 import { Octicons } from "@expo/vector-icons";
 import { Image, Text, View } from "react-native";
 
-export default function Card() {
+export default function Card({ data }) {
   return (
     <View
       style={{
@@ -22,7 +22,9 @@ export default function Card() {
             alignItems: "center",
           }}
         >
-          <Text style={{ fontSize: 25, color: "white" }}>N</Text>
+          <Text style={{ fontSize: 25, color: "white" }}>
+            {data.DetailAuthor.username[0]}
+          </Text>
         </View>
         <View
           style={{
@@ -30,12 +32,14 @@ export default function Card() {
             justifyContent: "space-between",
           }}
         >
-          <Text style={{ fontSize: 20, fontWeight: "500" }}>Username</Text>
+          <Text style={{ fontSize: 20, fontWeight: "500" }}>
+            {data.DetailAuthor.username}
+          </Text>
           <Text style={{ color: "gray", fontWeight: "400" }}>Full Name</Text>
         </View>
       </View>
 
-      <Text>loremloremloremloremloremloremloremloremloremloremlorem</Text>
+      <Text>{data.content}</Text>
 
       <View
         style={{

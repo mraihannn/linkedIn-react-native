@@ -1,12 +1,52 @@
-import React from "react";
+import React, { useContext } from "react";
 import { FlatList, StyleSheet, Text, TextInput, View } from "react-native";
+import { useQuery, gql } from "@apollo/client";
+import * as SecureStore from "expo-secure-store";
+
 import Card from "../components/Card";
 import FollowCard from "../components/FollowCard";
+import { StatusBar } from "expo-status-bar";
+import { AuthContext } from "../App";
 
 export default function HomeScreen({ route, navigation }) {
   // const { message } = route.params;
+
+  const { setIsSignedIn } = useContext(AuthContext);
+  const GET_POSTS = gql`
+    query GetPosts {
+      getPosts {
+        _id
+        content
+        tags
+        imgUrl
+        comments {
+          content
+          username
+          createdAt
+          updatedAt
+        }
+        authorId
+        likes {
+          username
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+        DetailAuthor {
+          _id
+          username
+        }
+      }
+    }
+  `;
+
+  const { loading, error, data } = useQuery(GET_POSTS);
+
   const [search, setSearch] = React.useState("");
   const DATA = [1, 2, 3, 4, 5, 6, 7];
+
+  console.log({ loading, error, data });
   return (
     <View style={styles.container}>
       <View
@@ -38,6 +78,20 @@ export default function HomeScreen({ route, navigation }) {
           value={search}
           placeholder="Search User"
         />
+        <Text
+          onPress={async () => {
+            await SecureStore.deleteItemAsync("accessToken");
+            setIsSignedIn(false);
+          }}
+          style={{
+            fontWeight: "bold",
+            fontSize: 15,
+            paddingHorizontal: 5,
+            color: "#0a66c2",
+          }}
+        >
+          Logout
+        </Text>
       </View>
       {search.length > 0 ? (
         <View
@@ -51,11 +105,12 @@ export default function HomeScreen({ route, navigation }) {
         </View>
       ) : (
         <FlatList
-          data={DATA}
-          renderItem={() => <Card />}
-          keyExtractor={(item) => item.toString()}
+          data={data?.getPosts}
+          renderItem={({ item }) => <Card data={item} />}
+          keyExtractor={(item) => item._id}
         />
       )}
+      <StatusBar style="auto" />
     </View>
   );
 }

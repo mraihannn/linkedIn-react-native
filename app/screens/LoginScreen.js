@@ -1,10 +1,49 @@
+import { gql, useMutation } from "@apollo/client";
 import { StatusBar } from "expo-status-bar";
-import React from "react";
-import { StyleSheet, Image, Text, View, TextInput, Button } from "react-native";
+import React, { useContext } from "react";
+import {
+  StyleSheet,
+  Image,
+  Text,
+  View,
+  TextInput,
+  Button,
+  Alert,
+} from "react-native";
+import * as SecureStore from "expo-secure-store";
+
+import { AuthContext } from "../App";
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+
+  const { setIsSignedIn } = useContext(AuthContext);
+
+  const LOGIN = gql`
+    mutation Login($password: String, $email: String) {
+      login(password: $password, email: $email) {
+        accessToken
+      }
+    }
+  `;
+
+  const [login, { loading }] = useMutation(LOGIN);
+
+  const handleSubmit = async () => {
+    try {
+      const result = await login({ variables: { email, password } });
+      await SecureStore.setItemAsync(
+        "accessToken",
+        result.data.login.accessToken
+      );
+      setIsSignedIn(true);
+      console.log(result);
+    } catch (error) {
+      Alert.alert(error.message);
+      console.log(error.message);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -44,11 +83,10 @@ export default function LoginScreen({ navigation }) {
           Dont have accout? Sign Up
         </Text>
         <Button
+          disabled={loading}
           color={"#0a66c2"}
-          title="Sign In"
-          onPress={() =>
-            navigation.navigate("Main", { message: "Data from Login" })
-          }
+          title={loading ? "Submitting" : "Sign In"}
+          onPress={handleSubmit}
         />
       </View>
 
