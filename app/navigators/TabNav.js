@@ -4,6 +4,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import HomeScreen from "../screens/HomeScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import CreatePostScree from "../screens/CreatePostScreen";
+import DetailPostScreen from "../screens/DetailScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -24,6 +25,8 @@ export default function MyTabs() {
             iconName = focused ? "add-circle" : "add-circle-outline";
           } else if (route.name === "Profile") {
             iconName = focused ? "person" : "person-outline";
+          } else if (route.name === "Detail") {
+            iconName = focused ? "document-text" : "document-text-outline";
           }
 
           // You can return any component that you like here!
@@ -32,6 +35,7 @@ export default function MyTabs() {
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen options={{}} name="Detail" component={DetailPostScreen} />
       <Tab.Screen name="CreatePost" component={CreatePostScree} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>

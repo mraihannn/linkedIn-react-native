@@ -42,6 +42,9 @@ export default function Card() {
           flexDirection: "row",
           alignItems: "center",
           // backgroundColor: "red",
+          borderTopColor: "#e9e5df",
+          borderTopWidth: 1,
+          paddingTop: 10,
           justifyContent: "space-around",
         }}
       >
