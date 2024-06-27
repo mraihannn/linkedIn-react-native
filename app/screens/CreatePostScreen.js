@@ -19,7 +19,7 @@ export default function CreatePostScree({ navigation }) {
         </Text>
         <Text
           style={{
-            backgroundColor: "blue",
+            backgroundColor: "#0a66c2",
             color: "white",
             fontWeight: "bold",
             borderRadius: 20,
@@ -34,7 +34,7 @@ export default function CreatePostScree({ navigation }) {
       <TextInput
         style={styles.input}
         multiline={true}
-        numberOfLines={10}
+        // numberOfLines={10}
         onChangeText={setContent}
         value={content}
         placeholder="What do you think?"

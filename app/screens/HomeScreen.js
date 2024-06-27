@@ -1,17 +1,17 @@
-import { StatusBar } from "expo-status-bar";
 import React from "react";
-
-import { Button, Image, StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 import Card from "../components/Card";
 
 export default function HomeScreen({ route, navigation }) {
   // const { message } = route.params;
+  const DATA = [1, 2, 3, 4, 5, 6, 7];
   return (
     <View style={styles.container}>
-      <Card />
-      <Card />
-      <Card />
-      <StatusBar style="auto" />
+      <FlatList
+        data={DATA}
+        renderItem={() => <Card />}
+        keyExtractor={(item) => item.id}
+      />
     </View>
   );
 }
@@ -19,14 +19,11 @@ export default function HomeScreen({ route, navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#D3D3D3",
+    backgroundColor: "#e9e5df",
     paddingTop: 60,
-    gap: 10,
-    // paddingHorizontal: 20,
   },
   input: {
     height: 40,
-    // borderWidth: 1,
     padding: 10,
   },
 });

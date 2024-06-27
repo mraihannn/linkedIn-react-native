@@ -65,7 +65,7 @@ export default function RegisterScreen({ navigation }) {
           Already have accout? Sign In
         </Text>
         <Button
-          // color={"red"}
+          color={"#0a66c2"}
           title="Sign Up"
           onPress={() => Alert.alert("Simple Button pressed")}
         />

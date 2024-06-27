@@ -44,7 +44,7 @@ export default function LoginScreen({ navigation }) {
           Dont have accout? Sign Up
         </Text>
         <Button
-          // color={"red"}
+          color={"#0a66c2"}
           title="Sign In"
           onPress={() =>
             navigation.navigate("Main", { message: "Data from Login" })

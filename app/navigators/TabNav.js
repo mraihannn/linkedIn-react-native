@@ -13,7 +13,8 @@ export default function MyTabs() {
       initialRouteName="Home"
       screenOptions={({ route }) => ({
         headerShown: false,
-        // tabBarActiveTintColor: "blue",
+        tabBarActiveTintColor: "black",
+        tabBarInactiveTintColor: "#56687a",
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 

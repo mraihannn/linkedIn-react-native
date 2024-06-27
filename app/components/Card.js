@@ -7,28 +7,31 @@ export default function Card() {
       style={{
         padding: 16,
         backgroundColor: "white",
-        // flexDirection: "row",
-
         gap: 10,
-        // flexWrap: "wrap",
+        marginBottom: 10,
       }}
     >
       <View style={{ flexDirection: "row", gap: 10 }}>
-        <Image
-          style={{ borderRadius: 45, width: 50, height: 50 }}
-          source={{
-            uri: "https://reactnative.dev/img/tiny_logo.png",
-          }}
-        />
         <View
           style={{
-            // backgroundColor: "red",
+            borderRadius: 45,
+            width: 50,
+            height: 50,
+            backgroundColor: "#0a66c2",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Text style={{ fontSize: 25, color: "white" }}>N</Text>
+        </View>
+        <View
+          style={{
             flex: 1,
             justifyContent: "space-between",
           }}
         >
-          <Text style={{ fontSize: 20, fontWeight: "500" }}>Name</Text>
-          <Text style={{ color: "gray", fontWeight: "400" }}>Username</Text>
+          <Text style={{ fontSize: 20, fontWeight: "500" }}>Username</Text>
+          <Text style={{ color: "gray", fontWeight: "400" }}>Full Name</Text>
         </View>
       </View>
 
@@ -47,7 +50,7 @@ export default function Card() {
             style={{ transform: "scaleX(-1)" }}
             name="thumbsup"
             size={16}
-            color="black"
+            color="#38434f"
           />
           <Text>Like</Text>
         </View>
@@ -56,7 +59,7 @@ export default function Card() {
             style={{ transform: "scaleX(-1)" }}
             name="comment"
             size={16}
-            color="black"
+            color="#38434f"
           />
           <Text>Comment</Text>
         </View>
