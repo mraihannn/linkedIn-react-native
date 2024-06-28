@@ -23,7 +23,7 @@ export default function Card({ data }) {
           }}
         >
           <Text style={{ fontSize: 25, color: "white" }}>
-            {data.DetailAuthor.username[0]}
+            {data.DetailAuthor.username[0].toUpperCase()}
           </Text>
         </View>
         <View

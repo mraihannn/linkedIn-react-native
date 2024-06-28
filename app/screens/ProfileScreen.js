@@ -1,9 +1,98 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import FollowCard from "../components/FollowCard";
+import { gql, useQuery } from "@apollo/client";
+import * as SecureStore from "expo-secure-store";
 
-export default function ProfileScreen({ navigation }) {
-  const DATA = [1, 2, 3, 4, 5, 6, 7];
+export default function ProfileScreen({ navigation, route }) {
+  const [id, setId] = useState("");
+  const [toggleFollowing, setToggleFollowing] = useState(false);
+
+  const GET_USER_BY_ID = gql`
+    query GetUserById($id: String) {
+      getUserById(id: $id) {
+        _id
+        name
+        following {
+          _id
+          followingId
+          followerId
+          createdAt
+          updatedAt
+        }
+        email
+        username
+        followingDetail {
+          _id
+          name
+          username
+          email
+        }
+        follower {
+          _id
+          followingId
+          followerId
+          createdAt
+          updatedAt
+        }
+        followerDetail {
+          _id
+          name
+          username
+          email
+        }
+      }
+    }
+  `;
+
+  const {
+    loading: loadingCurrentUser,
+    error: errorCurrentUser,
+    data: dataCurrentUser,
+  } = useQuery(GET_USER_BY_ID, {
+    variables: { id },
+  });
+
+  const {
+    loading: loadingOtherUser,
+    error: errorOtherUser,
+    data: dataOtherUser,
+  } = useQuery(GET_USER_BY_ID, {
+    variables: { id: route.params?._id },
+    skip: !route.params,
+  });
+
+  useEffect(() => {
+    SecureStore.getItemAsync("userId").then((res) => {
+      setId(res);
+    });
+  }, []);
+
+  const loading = loadingCurrentUser || loadingOtherUser;
+  const error = errorCurrentUser || errorOtherUser;
+  const data = dataOtherUser || dataCurrentUser;
+
+  if (loading)
+    return (
+      <View
+        style={{ flex: 1, justifyContent: "center", alignContent: "center" }}
+      >
+        <Text style={{ textAlign: "center" }}>Loading...</Text>
+      </View>
+    );
+  if (error)
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignContent: "center",
+        }}
+      >
+        <Text style={{ textAlign: "center" }}>{error.message}</Text>
+      </View>
+    );
+
   return (
     <View style={styles.container}>
       <View style={{ backgroundColor: "#56687a", height: 120 }}></View>
@@ -21,11 +110,17 @@ export default function ProfileScreen({ navigation }) {
           alignItems: "center",
         }}
       >
-        <Text style={{ fontSize: 70, color: "white" }}>U</Text>
+        <Text style={{ fontSize: 70, color: "white" }}>
+          {data.getUserById.username[0].toUpperCase()}
+        </Text>
       </View>
       <View style={{ paddingHorizontal: 20, marginTop: 5 }}>
-        <Text style={{ fontSize: 30, fontWeight: "500" }}>Fullname</Text>
-        <Text style={{ fontSize: 20, fontWeight: "400" }}>Username</Text>
+        <Text style={{ fontSize: 30, fontWeight: "500" }}>
+          {data.getUserById?.name || data.getUserById.username}
+        </Text>
+        <Text style={{ fontSize: 20, fontWeight: "400" }}>
+          {data.getUserById.username}
+        </Text>
         {/* <Text style={{ fontSize: 20, color: "blue", fontWeight: "400" }}>
           name@gmail.com
         </Text> */}
@@ -36,8 +131,18 @@ export default function ProfileScreen({ navigation }) {
             justifyContent: "space-between",
           }}
         >
-          <Text style={styles.textFollower}>70 Followers</Text>
-          <Text style={styles.textFollower}>10 Following</Text>
+          <Text
+            onPress={() => setToggleFollowing(false)}
+            style={styles.textFollower}
+          >
+            {data.getUserById.follower?.length || 0} Followers
+          </Text>
+          <Text
+            onPress={() => setToggleFollowing(true)}
+            style={styles.textFollower}
+          >
+            {data.getUserById.following?.length || 0} Following
+          </Text>
         </View>
       </View>
 
@@ -49,19 +154,29 @@ export default function ProfileScreen({ navigation }) {
           borderTopWidth: 10,
           borderColor: "#e9e5df",
           marginTop: 10,
+          flex: 1,
         }}
       >
-        <Text style={{ fontSize: 25, fontWeight: "500" }}>Followers</Text>
+        <Text style={{ fontSize: 25, fontWeight: "500" }}>
+          {toggleFollowing ? "Following" : "Followers"}
+        </Text>
         <FlatList
-          data={DATA}
-          renderItem={() => <FollowCard />}
-          keyExtractor={(item) => item.id}
+          data={
+            toggleFollowing
+              ? data.getUserById.followingDetail
+              : data.getUserById.followerDetail
+          }
+          renderItem={({ item }) => (
+            <FollowCard
+              navigation={navigation}
+              data={item}
+              mode={toggleFollowing ? "following" : ""}
+              following={dataCurrentUser.getUserById.followingDetail}
+            />
+          )}
+          keyExtractor={(item) => item._id}
         />
       </View>
-      {/* <Button
-        title="Back to Login"
-        onPress={() => navigation.navigate("Login")}
-      /> */}
     </View>
   );
 }

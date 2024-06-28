@@ -52,15 +52,19 @@ export default function HomeScreen({ route, navigation }) {
       <View
         style={{ flex: 1, justifyContent: "center", alignContent: "center" }}
       >
-        <Text>Loading...</Text>
+        <Text style={{ textAlign: "center" }}>Loading...</Text>
       </View>
     );
   if (error)
     return (
       <View
-        style={{ flex: 1, justifyContent: "center", alignContent: "center" }}
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignContent: "center",
+        }}
       >
-        <Text>{error.message}</Text>
+        <Text style={{ textAlign: "center" }}>{error.message}</Text>
       </View>
     );
 

@@ -45,6 +45,12 @@ class User {
           as: "followerDetail",
         },
       },
+      {
+        $project: {
+          password: 0,
+          // "followingDetail.password": 0,
+        },
+      },
       // {
       //   $unwind: {
       //     path: "$DetailAuthor",

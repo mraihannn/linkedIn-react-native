@@ -24,6 +24,7 @@ export default function LoginScreen({ navigation }) {
     mutation Login($password: String, $email: String) {
       login(password: $password, email: $email) {
         accessToken
+        userId
       }
     }
   `;
@@ -33,12 +34,13 @@ export default function LoginScreen({ navigation }) {
   const handleSubmit = async () => {
     try {
       const result = await login({ variables: { email, password } });
+      console.log(result);
       await SecureStore.setItemAsync(
         "accessToken",
         result.data.login.accessToken
       );
+      await SecureStore.setItemAsync("userId", result.data.login.userId);
       setIsSignedIn(true);
-      console.log(result);
     } catch (error) {
       Alert.alert(error.message);
       console.log(error.message);
