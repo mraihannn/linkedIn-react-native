@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
+import * as SecureStore from "expo-secure-store";
+
 import { Ionicons } from "@expo/vector-icons";
 import { Octicons } from "@expo/vector-icons";
 import {
@@ -11,6 +13,7 @@ import {
 } from "react-native";
 import CommentCard from "../components/CommentCard";
 import { gql, useMutation, useQuery } from "@apollo/client";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function DetailPostScreen({ navigation, route }) {
   if (!route.params) {
@@ -20,7 +23,20 @@ export default function DetailPostScreen({ navigation, route }) {
       </View>
     );
   }
+  useFocusEffect(
+    React.useCallback(() => {
+      refetch();
+    }, [route.params._id])
+  );
+
   const [content, setContent] = React.useState("");
+  const [username, setUsername] = React.useState();
+
+  useEffect(() => {
+    SecureStore.getItemAsync("username").then((res) => {
+      setUsername(res);
+    });
+  }, []);
 
   const GET_POSTS_BY_ID = gql`
     query GetPostById($id: String) {
@@ -62,9 +78,12 @@ export default function DetailPostScreen({ navigation, route }) {
     }
   `;
 
-  const { loading, error, data } = useQuery(GET_POSTS_BY_ID, {
+  const { loading, error, data, refetch } = useQuery(GET_POSTS_BY_ID, {
     variables: { id: route.params._id },
   });
+  useEffect(() => {
+    refetch();
+  }, [route.params._id]);
 
   const [postFunction, { loading: addCommentLoading }] = useMutation(
     ADD_COMMENT,
@@ -125,7 +144,7 @@ export default function DetailPostScreen({ navigation, route }) {
               }}
             >
               <Text style={{ fontSize: 25, color: "white" }}>
-                {data?.getPostById.DetailAuthor.username[0].toUpperCase()}
+                {data?.getPostById?.DetailAuthor?.username[0]?.toUpperCase()}
               </Text>
             </View>
             <View
@@ -136,15 +155,15 @@ export default function DetailPostScreen({ navigation, route }) {
             >
               <Text style={{ fontSize: 20, fontWeight: "500" }}>
                 {data?.getPostById.DetailAuthor?.name ||
-                  data?.getPostById.DetailAuthor.username}
+                  data?.getPostById.DetailAuthor?.username}
               </Text>
               <Text style={{ color: "gray", fontWeight: "400" }}>
-                {data?.getPostById.DetailAuthor.username}
+                {data?.getPostById?.DetailAuthor?.username}
               </Text>
             </View>
           </View>
 
-          <Text>{data?.getPostById.content}</Text>
+          <Text>{data?.getPostById?.content}</Text>
 
           <View
             style={{ flexDirection: "row", justifyContent: "space-between" }}
@@ -214,7 +233,9 @@ export default function DetailPostScreen({ navigation, route }) {
               alignItems: "center",
             }}
           >
-            <Text style={{ fontSize: 25, color: "white" }}>N</Text>
+            <Text style={{ fontSize: 25, color: "white" }}>
+              {username && username[0]?.toUpperCase()}
+            </Text>
           </View>
           <TextInput
             style={styles.input}

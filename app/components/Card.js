@@ -1,7 +1,11 @@
 import { Octicons } from "@expo/vector-icons";
 import { Image, Text, TouchableWithoutFeedback, View } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
 
-export default function Card({ navigation, data }) {
+export default function Card({ navigation, data, username, handleLike }) {
+  const likesUsername = data.likes.map((user) => user.username);
+  const isLike = likesUsername.includes(username);
+
   return (
     <TouchableWithoutFeedback
       onPress={() => navigation.navigate("Detail", { _id: data._id })}
@@ -55,15 +59,29 @@ export default function Card({ navigation, data }) {
             justifyContent: "space-around",
           }}
         >
-          <View style={{ alignItems: "center" }}>
-            <Octicons
-              style={{ transform: "scaleX(-1)" }}
-              name="thumbsup"
-              size={16}
-              color="#38434f"
-            />
-            <Text>Like</Text>
-          </View>
+          <TouchableWithoutFeedback onPress={() => handleLike(data._id)}>
+            {isLike ? (
+              <View style={{ alignItems: "center" }}>
+                <AntDesign
+                  style={{ transform: "scaleX(-1)" }}
+                  name="like1"
+                  size={16}
+                  color="#38434f"
+                />
+                <Text>Like</Text>
+              </View>
+            ) : (
+              <View style={{ alignItems: "center" }}>
+                <AntDesign
+                  style={{ transform: "scaleX(-1)" }}
+                  name="like2"
+                  size={16}
+                  color="#38434f"
+                />
+                <Text>Like</Text>
+              </View>
+            )}
+          </TouchableWithoutFeedback>
           <View style={{ alignItems: "center" }}>
             <Octicons
               style={{ transform: "scaleX(-1)" }}

@@ -1,6 +1,13 @@
-import React, { useContext, useState } from "react";
-import { FlatList, StyleSheet, Text, TextInput, View } from "react-native";
-import { useQuery, gql } from "@apollo/client";
+import React, { useContext, useEffect, useState } from "react";
+import {
+  Alert,
+  FlatList,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+import { useQuery, gql, useMutation } from "@apollo/client";
 import * as SecureStore from "expo-secure-store";
 
 import Card from "../components/Card";
@@ -38,29 +45,44 @@ export const GET_POSTS = gql`
   }
 `;
 
+const ADD_LIKE = gql`
+  mutation AddLike($idPost: String) {
+    addLike(idPost: $idPost) {
+      username
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 export default function HomeScreen({ route, navigation }) {
-  // const { message } = route.params;
+  const [username, setUsername] = React.useState();
 
-  const [userId, setUserId] = useState();
-
-  SecureStore.getItemAsync("userId").then((res) => {
-    setUserId(res);
-  });
+  useEffect(() => {
+    SecureStore.getItemAsync("username").then((res) => {
+      setUsername(res);
+    });
+  }, []);
 
   const { setIsSignedIn } = useContext(AuthContext);
 
-  const {
-    loading: loadingCurrentUser,
-    error: errorCurrentUser,
-    data: dataCurrentUser,
-  } = useQuery(GET_USER_BY_ID, {
-    variables: { id: userId },
-  });
-  // console.log(dataCurrentUser);
   const { loading, error, data } = useQuery(GET_POSTS);
 
   const [search, setSearch] = React.useState("");
   const DATA = [1, 2, 3, 4, 5, 6, 7];
+
+  const [likeFunction] = useMutation(ADD_LIKE, {
+    // refetchQueries: [GET_POSTS],
+  });
+
+  const handleLike = async (idPost) => {
+    try {
+      await likeFunction({ variables: { idPost } });
+      Alert.alert("Success add like");
+    } catch (error) {
+      Alert.alert(error.message);
+    }
+  };
 
   if (loading)
     return (
@@ -106,7 +128,7 @@ export default function HomeScreen({ route, navigation }) {
           }}
         >
           <Text style={{ fontSize: 25, color: "white" }}>
-            {dataCurrentUser?.getUserById.username[0].toUpperCase()}
+            {username && username[0]?.toUpperCase()}
           </Text>
         </View>
         <TextInput
@@ -145,7 +167,12 @@ export default function HomeScreen({ route, navigation }) {
         <FlatList
           data={data?.getPosts}
           renderItem={({ item }) => (
-            <Card navigation={navigation} data={item} />
+            <Card
+              navigation={navigation}
+              data={item}
+              username={username}
+              handleLike={handleLike}
+            />
           )}
           keyExtractor={(item) => item._id}
         />

@@ -56,6 +56,7 @@ const typeDefs = `#graphql
   type AccessToken {
     accessToken: String
     userId: String
+    username: String
   }
 
   # Write Operation
@@ -129,6 +130,7 @@ const resolvers = {
       return {
         accessToken: token,
         userId: user._id,
+        username: user.username,
       };
     },
   },

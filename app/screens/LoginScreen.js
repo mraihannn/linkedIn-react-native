@@ -25,6 +25,7 @@ export default function LoginScreen({ navigation }) {
       login(password: $password, email: $email) {
         accessToken
         userId
+        username
       }
     }
   `;
@@ -40,6 +41,7 @@ export default function LoginScreen({ navigation }) {
         result.data.login.accessToken
       );
       await SecureStore.setItemAsync("userId", result.data.login.userId);
+      await SecureStore.setItemAsync("username", result.data.login.username);
       setIsSignedIn(true);
     } catch (error) {
       Alert.alert(error.message);
