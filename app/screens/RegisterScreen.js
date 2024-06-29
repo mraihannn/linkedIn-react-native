@@ -1,3 +1,4 @@
+import { gql, useMutation } from "@apollo/client";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import {
@@ -15,6 +16,38 @@ export default function RegisterScreen({ navigation }) {
   const [password, setPassword] = React.useState("");
   const [username, setUsername] = React.useState("");
   const [name, setName] = React.useState("");
+
+  const REGISTER = gql`
+    mutation Register($user: newUser) {
+      register(user: $user) {
+        _id
+        name
+        username
+        email
+      }
+    }
+  `;
+
+  const user = {
+    email,
+    password,
+    username,
+    name,
+  };
+
+  const [register, { loading }] = useMutation(REGISTER);
+
+  const handleSubmit = async () => {
+    try {
+      await register({ variables: { user } });
+      Alert.alert("Success Create Account");
+      navigation.navigate("Login");
+    } catch (error) {
+      Alert.alert(error.message);
+      console.log(error.message);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View
@@ -38,14 +71,14 @@ export default function RegisterScreen({ navigation }) {
         <TextInput
           placeholder="Name"
           style={styles.input}
-          onChangeText={name}
-          value={setName}
+          onChangeText={setName}
+          value={name}
         />
         <TextInput
           placeholder="Username"
           style={styles.input}
-          onChangeText={username}
-          value={setUsername}
+          onChangeText={setUsername}
+          value={username}
         />
         <TextInput
           placeholder="Email"
@@ -66,8 +99,9 @@ export default function RegisterScreen({ navigation }) {
         </Text>
         <Button
           color={"#0a66c2"}
-          title="Sign Up"
-          onPress={() => Alert.alert("Simple Button pressed")}
+          title={loading ? "Submitting" : "Sign Up"}
+          onPress={handleSubmit}
+          disabled={loading}
         />
       </View>
 

@@ -1,10 +1,16 @@
 import { Octicons } from "@expo/vector-icons";
 import { Image, Text, TouchableWithoutFeedback, View } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
+import { useState } from "react";
 
 export default function Card({ navigation, data, username, handleLike }) {
   const likesUsername = data.likes.map((user) => user.username);
-  const isLike = likesUsername.includes(username);
+  const [isLike, setIsLike] = useState(likesUsername.includes(username));
+
+  const handleLikeClick = (postId) => {
+    handleLike(postId);
+    setIsLike(true);
+  };
 
   return (
     <TouchableWithoutFeedback
@@ -59,7 +65,7 @@ export default function Card({ navigation, data, username, handleLike }) {
             justifyContent: "space-around",
           }}
         >
-          <TouchableWithoutFeedback onPress={() => handleLike(data._id)}>
+          <TouchableWithoutFeedback onPress={() => handleLikeClick(data._id)}>
             {isLike ? (
               <View style={{ alignItems: "center" }}>
                 <AntDesign
