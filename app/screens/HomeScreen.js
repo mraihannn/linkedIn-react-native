@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { FlatList, StyleSheet, Text, TextInput, View } from "react-native";
 import { useQuery, gql } from "@apollo/client";
 import * as SecureStore from "expo-secure-store";
@@ -7,6 +7,7 @@ import Card from "../components/Card";
 import FollowCard from "../components/FollowCard";
 import { StatusBar } from "expo-status-bar";
 import { AuthContext } from "../App";
+import { GET_USER_BY_ID } from "./ProfileScreen";
 
 export const GET_POSTS = gql`
   query GetPosts {
@@ -40,8 +41,22 @@ export const GET_POSTS = gql`
 export default function HomeScreen({ route, navigation }) {
   // const { message } = route.params;
 
+  const [userId, setUserId] = useState();
+
+  SecureStore.getItemAsync("userId").then((res) => {
+    setUserId(res);
+  });
+
   const { setIsSignedIn } = useContext(AuthContext);
 
+  const {
+    loading: loadingCurrentUser,
+    error: errorCurrentUser,
+    data: dataCurrentUser,
+  } = useQuery(GET_USER_BY_ID, {
+    variables: { id: userId },
+  });
+  // console.log(dataCurrentUser);
   const { loading, error, data } = useQuery(GET_POSTS);
 
   const [search, setSearch] = React.useState("");
@@ -90,7 +105,9 @@ export default function HomeScreen({ route, navigation }) {
             alignItems: "center",
           }}
         >
-          <Text style={{ fontSize: 25, color: "white" }}>N</Text>
+          <Text style={{ fontSize: 25, color: "white" }}>
+            {dataCurrentUser?.getUserById.username[0].toUpperCase()}
+          </Text>
         </View>
         <TextInput
           style={styles.input}
@@ -127,7 +144,9 @@ export default function HomeScreen({ route, navigation }) {
       ) : (
         <FlatList
           data={data?.getPosts}
-          renderItem={({ item }) => <Card data={item} />}
+          renderItem={({ item }) => (
+            <Card navigation={navigation} data={item} />
+          )}
           keyExtractor={(item) => item._id}
         />
       )}

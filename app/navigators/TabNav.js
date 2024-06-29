@@ -35,7 +35,7 @@ export default function MyTabs() {
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen options={{}} name="Detail" component={DetailPostScreen} />
+      <Tab.Screen name="Detail" component={DetailPostScreen} />
       <Tab.Screen name="CreatePost" component={CreatePostScree} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>

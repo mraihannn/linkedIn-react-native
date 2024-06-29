@@ -12,9 +12,9 @@ import MyTabs from "./navigators/TabNav";
 import { createContext } from "react";
 import { Image, View } from "react-native";
 
-export const AuthContext = createContext();
-
 const Stack = createNativeStackNavigator();
+
+export const AuthContext = createContext();
 
 export default function App() {
   const [isSignedIn, setIsSignedIn] = useState(false);

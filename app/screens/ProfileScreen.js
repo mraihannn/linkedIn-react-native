@@ -4,46 +4,46 @@ import FollowCard from "../components/FollowCard";
 import { gql, useQuery } from "@apollo/client";
 import * as SecureStore from "expo-secure-store";
 
+export const GET_USER_BY_ID = gql`
+  query GetUserById($id: String) {
+    getUserById(id: $id) {
+      _id
+      name
+      following {
+        _id
+        followingId
+        followerId
+        createdAt
+        updatedAt
+      }
+      email
+      username
+      followingDetail {
+        _id
+        name
+        username
+        email
+      }
+      follower {
+        _id
+        followingId
+        followerId
+        createdAt
+        updatedAt
+      }
+      followerDetail {
+        _id
+        name
+        username
+        email
+      }
+    }
+  }
+`;
+
 export default function ProfileScreen({ navigation, route }) {
   const [id, setId] = useState("");
   const [toggleFollowing, setToggleFollowing] = useState(false);
-
-  const GET_USER_BY_ID = gql`
-    query GetUserById($id: String) {
-      getUserById(id: $id) {
-        _id
-        name
-        following {
-          _id
-          followingId
-          followerId
-          createdAt
-          updatedAt
-        }
-        email
-        username
-        followingDetail {
-          _id
-          name
-          username
-          email
-        }
-        follower {
-          _id
-          followingId
-          followerId
-          createdAt
-          updatedAt
-        }
-        followerDetail {
-          _id
-          name
-          username
-          email
-        }
-      }
-    }
-  `;
 
   const {
     loading: loadingCurrentUser,

@@ -1,12 +1,94 @@
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Octicons } from "@expo/vector-icons";
-import { FlatList, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  Alert,
+  FlatList,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import CommentCard from "../components/CommentCard";
+import { gql, useMutation, useQuery } from "@apollo/client";
 
-export default function DetailPostScreen({ navigation }) {
+export default function DetailPostScreen({ navigation, route }) {
+  if (!route.params) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>Please select some post at Home Page</Text>
+      </View>
+    );
+  }
   const [content, setContent] = React.useState("");
-  const DATA = [1, 2, 3, 4, 5, 6, 7];
+
+  const GET_POSTS_BY_ID = gql`
+    query GetPostById($id: String) {
+      getPostById(id: $id) {
+        _id
+        content
+        tags
+        imgUrl
+        authorId
+        comments {
+          content
+          username
+          createdAt
+          updatedAt
+        }
+        likes {
+          username
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+        DetailAuthor {
+          _id
+          username
+        }
+      }
+    }
+  `;
+
+  const ADD_COMMENT = gql`
+    mutation AddComment($content: String, $idPost: String) {
+      addComment(content: $content, idPost: $idPost) {
+        content
+        username
+        createdAt
+        updatedAt
+      }
+    }
+  `;
+
+  const { loading, error, data } = useQuery(GET_POSTS_BY_ID, {
+    variables: { id: route.params._id },
+  });
+
+  const [postFunction, { loading: addCommentLoading }] = useMutation(
+    ADD_COMMENT,
+    {
+      refetchQueries: [
+        {
+          query: GET_POSTS_BY_ID,
+          variables: { id: route.params._id },
+        },
+      ],
+    }
+  );
+
+  const handleSubmit = async () => {
+    try {
+      await postFunction({
+        variables: { content, idPost: data.getPostById._id },
+      });
+      setContent("");
+    } catch (error) {
+      Alert.alert(error.message);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View
@@ -42,7 +124,9 @@ export default function DetailPostScreen({ navigation }) {
                 alignItems: "center",
               }}
             >
-              <Text style={{ fontSize: 25, color: "white" }}>N</Text>
+              <Text style={{ fontSize: 25, color: "white" }}>
+                {data?.getPostById.DetailAuthor.username[0].toUpperCase()}
+              </Text>
             </View>
             <View
               style={{
@@ -50,14 +134,28 @@ export default function DetailPostScreen({ navigation }) {
                 justifyContent: "space-between",
               }}
             >
-              <Text style={{ fontSize: 20, fontWeight: "500" }}>Username</Text>
+              <Text style={{ fontSize: 20, fontWeight: "500" }}>
+                {data?.getPostById.DetailAuthor?.name ||
+                  data?.getPostById.DetailAuthor.username}
+              </Text>
               <Text style={{ color: "gray", fontWeight: "400" }}>
-                Full Name
+                {data?.getPostById.DetailAuthor.username}
               </Text>
             </View>
           </View>
 
-          <Text>loremloremloremloremloremloremloremloremloremloremlorem</Text>
+          <Text>{data?.getPostById.content}</Text>
+
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
+            <Text style={{ color: "gray" }}>
+              {data?.getPostById.likes.length} Likes
+            </Text>
+            <Text style={{ color: "gray" }}>
+              {data?.getPostById.comments.length} Comments
+            </Text>
+          </View>
 
           <View
             style={{
@@ -70,7 +168,7 @@ export default function DetailPostScreen({ navigation }) {
               justifyContent: "space-around",
             }}
           >
-            <View style={{ alignItems: "center" }}>
+            {/* <V iew style={{ alignItems: "center" }}>
               <Octicons
                 style={{ transform: "scaleX(-1)" }}
                 name="thumbsup"
@@ -78,7 +176,7 @@ export default function DetailPostScreen({ navigation }) {
                 color="#38434f"
               />
               <Text>Like</Text>
-            </View>
+            </V>
             <View style={{ alignItems: "center" }}>
               <Octicons
                 style={{ transform: "scaleX(-1)" }}
@@ -87,15 +185,15 @@ export default function DetailPostScreen({ navigation }) {
                 color="#38434f"
               />
               <Text>Comment</Text>
-            </View>
+            </View> */}
           </View>
         </View>
         <View style={{ gap: 10, flex: 1 }}>
           <Text style={{ fontSize: 25, fontWeight: "500" }}>Comment</Text>
           <FlatList
-            data={DATA}
-            renderItem={() => <CommentCard />}
-            keyExtractor={(item) => item}
+            data={data?.getPostById.comments}
+            renderItem={({ item }) => <CommentCard data={item} />}
+            keyExtractor={(item, i) => i}
           />
         </View>
         <View
@@ -127,6 +225,7 @@ export default function DetailPostScreen({ navigation }) {
           />
           <View>
             <Text
+              onPress={handleSubmit}
               style={{
                 fontWeight: "bold",
                 fontSize: 15,

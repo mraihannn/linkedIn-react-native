@@ -34,10 +34,10 @@ export default function CreatePostScree({ navigation }) {
     }
   `;
 
+  const post = { content, imgUrl, tags };
   const [postFunction, { loading }] = useMutation(ADD_POST, {
     refetchQueries: [GET_POSTS, "getPosts"],
   });
-  const post = { content, imgUrl, tags };
 
   const handleSubmit = async () => {
     try {
