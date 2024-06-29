@@ -68,7 +68,7 @@ class User {
   static async getByName(username) {
     const agg = [
       {
-        $match: { username },
+        $match: { username: { $regex: new RegExp(username, "i") } },
       },
       {
         $lookup: {
@@ -102,6 +102,12 @@ class User {
           as: "followerDetail",
         },
       },
+      {
+        $project: {
+          password: 0,
+          // "followingDetail.password": 0,
+        },
+      },
       // {
       //   $unwind: {
       //     path: "$DetailAuthor",
@@ -112,7 +118,7 @@ class User {
     const Users = database.collection("Users");
     const cursor = Users.aggregate(agg);
     const result = await cursor.toArray();
-    return result[0];
+    return result;
   }
   static async findByEmail(email) {
     const Users = database.collection("Users");

@@ -1,8 +1,8 @@
 import { Text, TouchableWithoutFeedback, View } from "react-native";
 
 export default function FollowCard({ navigation, data, mode, following }) {
-  const followingIds = following.map((user) => user._id);
-  const isFollowing = followingIds.includes(data._id);
+  const followingIds = following?.map((user) => user._id);
+  const isFollowing = followingIds?.includes(data._id);
 
   return (
     <TouchableWithoutFeedback
@@ -32,15 +32,15 @@ export default function FollowCard({ navigation, data, mode, following }) {
             }}
           >
             <Text style={{ fontSize: 25, color: "white" }}>
-              {data.username[0].toUpperCase()}
+              {data?.username[0].toUpperCase()}
             </Text>
           </View>
           <View style={{ justifyContent: "space-between" }}>
             <Text style={{ fontSize: 17, fontWeight: 500 }}>
-              {data?.name || data.username}
+              {data?.name || data?.username}
             </Text>
             <Text style={{ fontSize: 17, fontWeight: 400 }}>
-              {data.username}
+              {data?.username}
             </Text>
           </View>
         </View>

@@ -43,7 +43,7 @@ const typeDefs = `#graphql
   # Read Operation
   type Query {
     getUserById(id:String): User
-    searchUser(username:String): User
+    searchUser(username:String): [User]
   }
 
   input newUser {

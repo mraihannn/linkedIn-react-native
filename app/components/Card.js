@@ -48,7 +48,9 @@ export default function Card({ navigation, data, username, handleLike }) {
             <Text style={{ fontSize: 20, fontWeight: "500" }}>
               {data.DetailAuthor.username}
             </Text>
-            <Text style={{ color: "gray", fontWeight: "400" }}>Full Name</Text>
+            <Text style={{ color: "gray", fontWeight: "400" }}>
+              {data.DetailAuthor.name || data.DetailAuthor.username}
+            </Text>
           </View>
         </View>
 

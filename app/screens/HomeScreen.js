@@ -55,21 +55,73 @@ const ADD_LIKE = gql`
   }
 `;
 
+const SEARCH_USER = gql`
+  query SearchUser($username: String) {
+    searchUser(username: $username) {
+      _id
+      name
+      username
+      email
+      following {
+        _id
+        followingId
+        followerId
+        createdAt
+        updatedAt
+      }
+      followingDetail {
+        _id
+        name
+        username
+        email
+      }
+      follower {
+        _id
+        followingId
+        followerId
+        createdAt
+        updatedAt
+      }
+      followerDetail {
+        _id
+        name
+        username
+        email
+      }
+    }
+  }
+`;
+
 export default function HomeScreen({ route, navigation }) {
   const [username, setUsername] = React.useState();
+  const [id, setId] = useState("");
 
   useEffect(() => {
     SecureStore.getItemAsync("username").then((res) => {
       setUsername(res);
     });
+    SecureStore.getItemAsync("userId").then((res) => {
+      setId(res);
+    });
   }, []);
+
+  const { data: dataCurrentUser } = useQuery(GET_USER_BY_ID, {
+    variables: { id },
+  });
 
   const { setIsSignedIn } = useContext(AuthContext);
 
   const { loading, error, data } = useQuery(GET_POSTS);
 
   const [search, setSearch] = React.useState("");
-  const DATA = [1, 2, 3, 4, 5, 6, 7];
+  const {
+    loading: searchLoading,
+    error: searchError,
+    data: searchData,
+  } = useQuery(SEARCH_USER, {
+    variables: { username: search },
+  });
+  console.log(searchData);
 
   const [likeFunction] = useMutation(ADD_LIKE, {
     // refetchQueries: [GET_POSTS],
@@ -157,10 +209,17 @@ export default function HomeScreen({ route, navigation }) {
         <View
           style={{ flex: 1, backgroundColor: "white", paddingHorizontal: 16 }}
         >
+          {searchLoading && <Text>Loading</Text>}
           <FlatList
-            data={DATA}
-            renderItem={() => <FollowCard />}
-            keyExtractor={(item) => item.toString()}
+            data={searchData?.searchUser}
+            renderItem={({ item }) => (
+              <FollowCard
+                navigation={navigation}
+                data={item}
+                following={dataCurrentUser.getUserById.followingDetail}
+              />
+            )}
+            keyExtractor={(item) => item._id}
           />
         </View>
       ) : (
