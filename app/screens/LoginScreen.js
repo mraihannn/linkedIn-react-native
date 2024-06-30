@@ -65,7 +65,6 @@ export default function LoginScreen({ navigation }) {
             uri: "https://images.rawpixel.com/image_png_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvdjk4Mi1kNS0xMF8xLnBuZw.png",
           }}
         />
-        <Text>Close</Text>
       </View>
       <View style={{ justifyContent: "center", flex: 1, gap: 20 }}>
         <Text style={{ fontSize: 40, fontWeight: "bold" }}>Sign In</Text>
