@@ -18,18 +18,14 @@ export default function CommentCard({ data }) {
           {data.username[0].toUpperCase()}
         </Text>
       </View>
+
       <View style={{ flex: 1, padding: 10, backgroundColor: "#e9e5df" }}>
-        <View>
-          <Text style={{ fontSize: 20, fontWeight: "500" }}>
-            {" "}
-            {data.username}
-          </Text>
-          <Text style={{ color: "gray", fontWeight: "400" }}>
-            {" "}
-            {data?.name || data.username}
-          </Text>
-        </View>
-        <Text>{data.content}</Text>
+        <Text style={{ fontSize: 20, fontWeight: "500" }}>{data.username}</Text>
+        <Text style={{ color: "gray", fontWeight: "400" }}>
+          {data?.name || data.username}
+        </Text>
+
+        <Text style={{ marginTop: 5 }}>{data.content}</Text>
       </View>
     </View>
   );

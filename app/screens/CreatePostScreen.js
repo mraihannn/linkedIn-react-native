@@ -7,7 +7,12 @@ import { GET_POSTS } from "./HomeScreen";
 export default function CreatePostScree({ navigation }) {
   const [content, setContent] = React.useState("");
   const [imgUrl, setImgUrl] = React.useState("");
-  const [tags, setTags] = React.useState("");
+  const [tags, setTags] = React.useState([]);
+
+  const handleTagsChange = (text) => {
+    const tagsArray = text.split(",").map((tag) => tag.trim());
+    setTags(tagsArray);
+  };
 
   const ADD_POST = gql`
     mutation AddPost($post: newPost) {
@@ -34,7 +39,7 @@ export default function CreatePostScree({ navigation }) {
     }
   `;
 
-  const post = { content, imgUrl, tags };
+  let post = { content, imgUrl, tags };
   const [postFunction, { loading }] = useMutation(ADD_POST, {
     refetchQueries: [GET_POSTS, "getPosts"],
   });
@@ -43,8 +48,16 @@ export default function CreatePostScree({ navigation }) {
     try {
       await postFunction({ variables: { post } });
       navigation.navigate("Home");
+      setContent("");
+      setImgUrl("");
+      setTags("");
+
+      // console.log(post);
     } catch (error) {
       Alert.alert(error.message);
+      setContent("");
+      setImgUrl("");
+      setTags("");
     }
   };
 
@@ -74,13 +87,27 @@ export default function CreatePostScree({ navigation }) {
           Posting
         </Text>
       </View>
+
       <TextInput
         style={styles.input}
         multiline={true}
-        // numberOfLines={10}
         onChangeText={setContent}
         value={content}
         placeholder="What do you think?"
+      />
+
+      <TextInput
+        style={{ borderWidth: 1, padding: 10 }}
+        onChangeText={setImgUrl}
+        value={imgUrl}
+        placeholder="Image Url"
+      />
+
+      <TextInput
+        style={{ borderWidth: 1, padding: 10 }}
+        onChangeText={handleTagsChange}
+        value={tags}
+        placeholder="Add some word, seperate with coma, ex: (edu,job)"
       />
     </View>
   );
@@ -97,7 +124,7 @@ const styles = StyleSheet.create({
     textAlignVertical: "top",
     flex: 1,
     height: 40,
-    // borderWidth: 1,
+    borderWidth: 1,
     padding: 10,
   },
 });

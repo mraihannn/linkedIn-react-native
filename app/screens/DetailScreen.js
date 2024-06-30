@@ -167,17 +167,20 @@ export default function DetailPostScreen({ navigation, route }) {
           <Text>{data?.getPostById?.content}</Text>
 
           <View style={{ flexDirection: "row", gap: 5 }}>
-            {["Edu", "Tech", "Job"].map((tag) => (
-              <Text style={{ color: "#0a66c2" }}>#{tag}</Text>
-            ))}
+            {data?.getPostById.tags &&
+              data?.getPostById.tags.map(
+                (tag) => tag && <Text style={{ color: "#0a66c2" }}>#{tag}</Text>
+              )}
           </View>
 
-          <Image
-            style={{ width: "100%", height: 200 }}
-            source={{
-              uri: "https://reactnative.dev/img/tiny_logo.png",
-            }}
-          />
+          {data?.getPostById?.imgUrl && (
+            <Image
+              style={{ width: "100%", height: 200, objectFit: "contain" }}
+              source={{
+                uri: `${data?.getPostById?.imgUrl}`,
+              }}
+            />
+          )}
 
           <View
             style={{ flexDirection: "row", justifyContent: "space-between" }}
