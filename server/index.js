@@ -28,6 +28,7 @@ const { verifyToken } = require("./helpers/jwt");
 const server = new ApolloServer({
   typeDefs: [userTypeDefs, postTypeDefs, followTypeDefs],
   resolvers: [userResolvers, postResolvers, followResolvers],
+  introspection: true,
 });
 
 // Passing an ApolloServer instance to the `startStandaloneServer` function:
