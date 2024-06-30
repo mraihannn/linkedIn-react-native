@@ -81,7 +81,6 @@ const resolvers = {
     searchUser: async (_, args) => {
       const { username } = args;
       const foundUser = await User.getByName(username);
-      // console.log(foundUser);
       return foundUser;
     },
   },

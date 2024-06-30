@@ -105,9 +105,12 @@ export default function HomeScreen({ route, navigation }) {
     });
   }, []);
 
-  const { data: dataCurrentUser } = useQuery(GET_USER_BY_ID, {
-    variables: { id },
-  });
+  const { data: dataCurrentUser, refetch: refetchCurrentUser } = useQuery(
+    GET_USER_BY_ID,
+    {
+      variables: { id },
+    }
+  );
 
   const { setIsSignedIn } = useContext(AuthContext);
 
@@ -121,7 +124,6 @@ export default function HomeScreen({ route, navigation }) {
   } = useQuery(SEARCH_USER, {
     variables: { username: search },
   });
-  console.log(searchData);
 
   const [likeFunction] = useMutation(ADD_LIKE, {
     // refetchQueries: [GET_POSTS],
@@ -217,6 +219,7 @@ export default function HomeScreen({ route, navigation }) {
                 navigation={navigation}
                 data={item}
                 following={dataCurrentUser.getUserById.followingDetail}
+                refetch={refetchCurrentUser}
               />
             )}
             keyExtractor={(item) => item._id}

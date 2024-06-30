@@ -1,8 +1,48 @@
+import { gql, useMutation } from "@apollo/client";
+import { useState } from "react";
 import { Text, TouchableWithoutFeedback, View } from "react-native";
 
-export default function FollowCard({ navigation, data, mode, following }) {
+export default function FollowCard({
+  navigation,
+  data,
+  mode,
+  following,
+  refetch,
+}) {
   const followingIds = following?.map((user) => user._id);
-  const isFollowing = followingIds?.includes(data._id);
+  const [isFollowing, setIsFollowing] = useState(
+    followingIds?.includes(data._id)
+  );
+
+  const ADD_FOLLOW = gql`
+    mutation AddFollow($followingId: String) {
+      addFollow(followingId: $followingId) {
+        _id
+        followingId
+        followerId
+        createdAt
+        updatedAt
+      }
+    }
+  `;
+
+  const [addFollowFunction] = useMutation(ADD_FOLLOW, {
+    // refetchQueries: [
+    //   {
+    //     query: GET_POSTS_BY_ID,
+    //     variables: { id: route.params._id },
+    //   },
+    // ],
+  });
+  const handleFollow = async () => {
+    try {
+      await addFollowFunction({ variables: { followingId: data._id } });
+      setIsFollowing(true);
+      refetch();
+    } catch (error) {
+      consonle.log(error);
+    }
+  };
 
   return (
     <TouchableWithoutFeedback
@@ -59,6 +99,7 @@ export default function FollowCard({ navigation, data, mode, following }) {
           </Text>
         ) : (
           <Text
+            onPress={handleFollow}
             style={{
               backgroundColor: "#0a66c2",
               color: "white",

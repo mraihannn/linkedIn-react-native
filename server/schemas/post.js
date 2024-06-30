@@ -84,7 +84,6 @@ const resolvers = {
       contextValue.auth();
       const { id } = args;
       const foundUser = await Post.getById(id);
-      console.log(foundUser);
       return foundUser;
     },
   },

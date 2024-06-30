@@ -49,6 +49,7 @@ export default function ProfileScreen({ navigation, route }) {
     loading: loadingCurrentUser,
     error: errorCurrentUser,
     data: dataCurrentUser,
+    refetch: refetchCurrentUser,
   } = useQuery(GET_USER_BY_ID, {
     variables: { id },
   });
@@ -57,6 +58,7 @@ export default function ProfileScreen({ navigation, route }) {
     loading: loadingOtherUser,
     error: errorOtherUser,
     data: dataOtherUser,
+    refetch: refetchOtherUser,
   } = useQuery(GET_USER_BY_ID, {
     variables: { id: route.params?._id },
     skip: !route.params,
@@ -168,6 +170,7 @@ export default function ProfileScreen({ navigation, route }) {
           }
           renderItem={({ item }) => (
             <FollowCard
+              refetch={route.params ? refetchOtherUser : refetchCurrentUser}
               navigation={navigation}
               data={item}
               mode={toggleFollowing ? "following" : ""}

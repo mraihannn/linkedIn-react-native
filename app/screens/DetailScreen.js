@@ -138,7 +138,7 @@ export default function DetailPostScreen({ navigation, route }) {
                 borderRadius: 45,
                 width: 50,
                 height: 50,
-                backgroundColor: "#0a66c2",
+                backgroundColor: "#e7a33e",
                 justifyContent: "center",
                 alignItems: "center",
               }}

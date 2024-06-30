@@ -9,7 +9,7 @@ export default function CommentCard({ data }) {
           marginTop: 10,
           width: 50,
           height: 50,
-          backgroundColor: "#0a66c2",
+          backgroundColor: "#e7a33e",
           justifyContent: "center",
           alignItems: "center",
         }}
