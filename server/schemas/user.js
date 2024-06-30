@@ -91,7 +91,7 @@ const resolvers = {
         throw new Error("Username is required");
       }
       const checkUsername = await User.getByName(username);
-      if (checkUsername) throw new Error("Username already exist");
+      if (checkUsername.length) throw new Error("Username already exist");
 
       if (!email) {
         throw new Error("Email is required");
