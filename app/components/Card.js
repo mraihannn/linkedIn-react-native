@@ -56,6 +56,19 @@ export default function Card({ navigation, data, username, handleLike }) {
 
         <Text>{data.content}</Text>
 
+        <View style={{ flexDirection: "row", gap: 5 }}>
+          {["Edu", "Tech", "Job"].map((tag) => (
+            <Text style={{ color: "#0a66c2" }}>#{tag}</Text>
+          ))}
+        </View>
+
+        <Image
+          style={{ width: "100%", height: 200 }}
+          source={{
+            uri: "https://reactnative.dev/img/tiny_logo.png",
+          }}
+        />
+
         <View
           style={{
             flexDirection: "row",

@@ -6,6 +6,7 @@ import { Octicons } from "@expo/vector-icons";
 import {
   Alert,
   FlatList,
+  Image,
   StyleSheet,
   Text,
   TextInput,
@@ -164,6 +165,19 @@ export default function DetailPostScreen({ navigation, route }) {
           </View>
 
           <Text>{data?.getPostById?.content}</Text>
+
+          <View style={{ flexDirection: "row", gap: 5 }}>
+            {["Edu", "Tech", "Job"].map((tag) => (
+              <Text style={{ color: "#0a66c2" }}>#{tag}</Text>
+            ))}
+          </View>
+
+          <Image
+            style={{ width: "100%", height: 200 }}
+            source={{
+              uri: "https://reactnative.dev/img/tiny_logo.png",
+            }}
+          />
 
           <View
             style={{ flexDirection: "row", justifyContent: "space-between" }}
